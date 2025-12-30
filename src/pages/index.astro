@@ -1,0 +1,753 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Litbuy | Exclusive Fashion</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Montserrat', 'sans-serif'],
+                    },
+                    colors: {
+                        gold: '#d4af37',
+                        darkbg: '#0f172a',
+                        cardbg: '#1e293b',
+                    },
+                    animation: {
+                        'gradient-x': 'gradient-x 15s ease infinite',
+                        'float': 'float 6s ease-in-out infinite',
+                        'fade-in-up': 'fadeInUp 0.8s ease-out forwards',
+                    },
+                    keyframes: {
+                        'gradient-x': {
+                            '0%, 100%': {
+                                'background-size': '200% 200%',
+                                'background-position': 'left center'
+                            },
+                            '50%': {
+                                'background-size': '200% 200%',
+                                'background-position': 'right center'
+                            },
+                        },
+                        fadeInUp: {
+                            '0%': { opacity: '0', transform: 'translateY(20px)' },
+                            '100%': { opacity: '1', transform: 'translateY(0)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background: linear-gradient(-45deg, #0f172a, #1e1b4b, #312e81, #0f172a);
+            background-size: 400% 400%;
+            animation: gradient-x 15s ease infinite;
+            color: #ffffff;
+            overflow-x: hidden;
+        }
+
+        /* Marquee Styles */
+        .marquee-container {
+            overflow: hidden;
+            white-space: nowrap;
+            background: linear-gradient(90deg, #d4af37, #fcd34d);
+        }
+        .marquee-content {
+            display: inline-block;
+            animation: marquee 25s linear infinite;
+            padding-left: 100%;
+        }
+        .marquee-content:hover {
+            animation-play-state: paused;
+        }
+        @keyframes marquee {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(-100%, 0); }
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0f172a;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #475569;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #d4af37;
+        }
+
+        .glass-effect {
+            background: rgba(30, 41, 59, 0.9);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .product-card {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .product-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5), 0 8px 10px -6px rgba(0, 0, 0, 0.5);
+            border-color: #d4af37;
+        }
+
+        .category-btn.active {
+            background-color: #d4af37;
+            color: #000;
+            font-weight: 800;
+            border-color: #d4af37;
+            box-shadow: 0 0 15px rgba(212, 175, 55, 0.4);
+        }
+        
+        /* Placeholder styling for missing images */
+        .img-placeholder {
+            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            width: 100%;
+            color: #334155;
+            font-weight: 800;
+            font-size: 2rem;
+            text-transform: uppercase;
+            position: relative;
+            overflow: hidden;
+        }
+        .img-placeholder::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: repeating-linear-gradient(
+                45deg,
+                transparent,
+                transparent 10px,
+                rgba(255, 255, 255, 0.03) 10px,
+                rgba(255, 255, 255, 0.03) 20px
+            );
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col font-sans">
+
+    <!-- Top Marquee Header (LINK TO REGISTER/INVITE) -->
+    <a href="https://litbuy.com/register?inviteCode=PBYWV0N12" target="_blank" class="block marquee-container py-3 text-black font-bold text-sm tracking-widest uppercase hover:text-gray-900 transition z-50 relative">
+        <div class="marquee-content">
+            LOG IN FOR 500€ IN COUPONS IN LITBUY &nbsp;&nbsp;&nbsp; • &nbsp;&nbsp;&nbsp; CLICK HERE TO CLAIM &nbsp;&nbsp;&nbsp; • &nbsp;&nbsp;&nbsp; USE CODE: PBYWV0N12 &nbsp;&nbsp;&nbsp; • &nbsp;&nbsp;&nbsp; EXCLUSIVE DEALS &nbsp;&nbsp;&nbsp; • &nbsp;&nbsp;&nbsp; HIGHEST QUALITY CLOTHING
+        </div>
+    </a>
+
+    <!-- Navigation & Search -->
+    <nav class="sticky top-0 z-40 glass-effect">
+        <div class="container mx-auto px-4 py-4">
+            <div class="flex flex-col md:flex-row justify-between items-center gap-5">
+                <!-- Logo -->
+                <div class="text-4xl font-extrabold tracking-tighter text-transparent bg-clip-text bg-gradient-to-r from-yellow-200 via-yellow-400 to-yellow-600 cursor-pointer hover:opacity-80 transition" onclick="filterProducts('all')">
+                    LITBUY
+                </div>
+
+                <!-- Search Bar -->
+                <div class="relative w-full md:max-w-xl">
+                    <input type="text" id="searchInput" placeholder="Search brands (e.g., Dior, Gucci)..." 
+                        class="w-full bg-slate-800/80 text-white border border-slate-600 rounded-full py-3 px-6 pl-12 focus:outline-none focus:border-yellow-500 focus:ring-1 focus:ring-yellow-500 transition-all shadow-inner">
+                    <i class="fas fa-search absolute left-5 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                </div>
+
+                <!-- Icons -->
+                <div class="flex gap-6 text-xl text-gray-300">
+                    <div class="relative cursor-pointer group">
+                        <i class="far fa-heart group-hover:text-yellow-400 transition"></i>
+                    </div>
+                    <div class="relative cursor-pointer group">
+                        <i class="fas fa-shopping-bag group-hover:text-yellow-400 transition"></i>
+                        <span class="absolute -top-2 -right-2 bg-yellow-500 text-black text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">0</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Categories -->
+            <div class="flex flex-wrap justify-center gap-2 mt-6" id="categoryContainer">
+                <button class="category-btn active px-5 py-2 rounded-full text-xs font-bold uppercase tracking-wide border border-slate-600 text-gray-300 hover:border-yellow-400 hover:text-white transition" onclick="filterProducts('all', this)">All</button>
+                <button class="category-btn px-5 py-2 rounded-full text-xs font-bold uppercase tracking-wide border border-slate-600 text-gray-300 hover:border-yellow-400 hover:text-white transition" onclick="filterProducts('shoes', this)">Shoes</button>
+                <button class="category-btn px-5 py-2 rounded-full text-xs font-bold uppercase tracking-wide border border-slate-600 text-gray-300 hover:border-yellow-400 hover:text-white transition" onclick="filterProducts('clothing', this)">Clothing</button>
+                <button class="category-btn px-5 py-2 rounded-full text-xs font-bold uppercase tracking-wide border border-slate-600 text-gray-300 hover:border-yellow-400 hover:text-white transition" onclick="filterProducts('accessories', this)">Accessories</button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-4 py-8 flex-grow">
+        
+        <!-- Best Sellers Header -->
+        <div id="bestSellerHeader" class="mb-8 flex items-center gap-4">
+            <div class="h-px bg-slate-700 flex-grow"></div>
+            <h2 class="text-2xl md:text-3xl font-bold text-yellow-500 uppercase tracking-widest flex items-center">
+                <i class="fas fa-fire mr-3 animate-pulse"></i> Best Sellers
+            </h2>
+            <div class="h-px bg-slate-700 flex-grow"></div>
+        </div>
+
+        <!-- Products Grid -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8" id="productGrid">
+            <!-- Products will be injected here -->
+        </div>
+        
+        <!-- No Results -->
+        <div id="noResults" class="hidden text-center py-24 bg-slate-800/30 rounded-2xl border border-slate-700 mt-10">
+            <i class="fas fa-ghost text-6xl text-slate-600 mb-4"></i>
+            <h3 class="text-2xl font-bold text-gray-300">No items found</h3>
+            <p class="text-gray-500 mt-2">Try searching for "Dior" or "Nike"</p>
+        </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-black text-gray-400 py-12 mt-auto border-t border-gray-800">
+        <div class="container mx-auto px-6">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-12 mb-12">
+                <div class="col-span-1 md:col-span-2">
+                    <h3 class="text-2xl font-bold text-white mb-4 tracking-tighter">LITBUY</h3>
+                    <p class="text-sm leading-relaxed max-w-md text-gray-500">
+                        The shoe factory guarantees the highest quality shoes. 
+                        Top Hot Products. 10000 FIND.
+                    </p>
+                </div>
+                <div>
+                    <h4 class="text-white font-bold mb-4 uppercase text-sm tracking-wider">Help</h4>
+                    <ul class="space-y-3 text-sm">
+                        <li><a href="#" class="hover:text-yellow-400 transition">Shipping Info</a></li>
+                        <li><a href="#" class="hover:text-yellow-400 transition">Returns</a></li>
+                        <li><a href="#" class="hover:text-yellow-400 transition">Size Guide</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-white font-bold mb-4 uppercase text-sm tracking-wider">Stay Connected</h4>
+                    <div class="flex gap-4 mb-4">
+                        <a href="#" class="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center hover:bg-yellow-500 hover:text-black transition"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center hover:bg-yellow-500 hover:text-black transition"><i class="fab fa-tiktok"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="border-t border-slate-900 pt-8 text-center text-xs text-gray-600">
+                &copy; 2025 LITBUY. All Rights Reserved.
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript Logic -->
+    <script>
+        // --- PRODUCT DATA CONFIGURATION ---
+        // Extracted directly from the provided HTML source.
+        // Each product has its specific Name, Price, Category, Local Image Path, and Direct Buy Link.
+        
+        const products = [
+            { name: "LOUIS VUITTON Skate", price: 84, category: "shoes", bestSeller: true, image: "resources/cellImage_1759876783_8.jpg", link: "https://litbuy.com/product/weidian/7644604271?inviteCode=PBYWV0N12" },
+            { name: "Ralph Laure Long sleeves", price: 28, category: "clothing", bestSeller: false, image: "resources/cellImage_1759876783_9.jpg", link: "https://litbuy.com/product/weidian/7647631820?inviteCode=PBYWV0N12" },
+            { name: "Gucci Top Batch", price: 68, category: "shoes", bestSeller: true, image: "resources/cellImage_1759876783_10.jpg", link: "https://litbuy.com/product/weidian/7644604271?inviteCode=PBYWV0N12" },
+            { name: "AMIPARIS wool sweater", price: 26, category: "clothing", bestSeller: false, image: "resources/cellImage_1759876783_11.jpg", link: "https://litbuy.com/product/weidian/7647641684?inviteCode=PBYWV0N12" },
+            { name: "Dior B30 Top PK", price: 66, category: "shoes", bestSeller: true, image: "resources/cellImage_1759876783_12.jpg", link: "https://litbuy.com/product/weidian/7647616138?inviteCode=PBYWV0N12" },
+            { name: "Mertra Fashion Hoodie", price: 30, category: "clothing", bestSeller: false, image: "resources/cellImage_1759876783_13.jpg", link: "https://litbuy.com/product/weidian/7647587974?inviteCode=PBYWV0N12" },
+            { name: "Timberland LV", price: 36, category: "shoes", bestSeller: false, image: "resources/cellImage_1759876783_14.jpg", link: "https://litbuy.com/product/weidian/7647521462?inviteCode=PBYWV0N12" },
+            { name: "ESSENTIAL High street", price: 22, category: "clothing", bestSeller: false, image: "resources/cellImage_1759876783_15.jpg", link: "https://litbuy.com/product/weidian/7644649825?inviteCode=PBYWV0N12" },
+            { name: "Ralph Lauren Socks", price: 7, category: "accessories", bestSeller: false, image: "resources/cellImage_1759876783_16.jpg", link: "https://litbuy.com/product/weidian/7644639933?inviteCode=PBYWV0N12" },
+            { name: "Corteiz letter d jacket", price: 16, category: "clothing", bestSeller: false, image: "resources/cellImage_1759876783_17.jpg", link: "https://litbuy.com/product/weidian/7647527450?inviteCode=PBYWV0N12" },
+            { name: "Air Force 1 Low", price: 13, category: "shoes", bestSeller: false, image: "resources/cellImage_1759876783_18.jpg", link: "https://litbuy.com/product/weidian/7644600317?inviteCode=PBYWV0N12" },
+            { name: "Nike sports sweatshirt", price: 22, category: "clothing", bestSeller: false, image: "resources/cellImage_1759876783_19.jpg", link: "https://litbuy.com/product/weidian/7644545411?inviteCode=PBYWV0N12" },
+            { name: "Jordan 4 GX Batch", price: 53, category: "shoes", bestSeller: true, image: "resources/cellImage_1759876783_20.jpg", link: "https://litbuy.com/product/weidian/7644570295?inviteCode=PBYWV0N12" },
+            { name: "SynaWord Hoodie", price: 16, category: "clothing", bestSeller: false, image: "resources/cellImage_1759876783_21.jpg", link: "https://litbuy.com/product/weidian/7644545409?inviteCode=PBYWV0N12" },
+            { name: "Air Max 95", price: 34, category: "shoes", bestSeller: false, image: "resources/cellImage_1759876783_22.jpg", link: "https://litbuy.com/product/weidian/7644628047?inviteCode=PBYWV0N12" },
+            { name: "STONE ISLAND Hoodie", price: 16, category: "clothing", bestSeller: false, image: "resources/cellImage_1759876783_23.jpg", link: "https://litbuy.com/product/weidian/7647572454?inviteCode=PBYWV0N12" },
+            { name: "Air Max Plus", price: 31, category: "shoes", bestSeller: false, image: "resources/cellImage_1759876783_24.jpg", link: "https://litbuy.com/product/weidian/7647596148?inviteCode=PBYWV0N12" },
+            { name: "Moncler Fashion Hoodie", price: 14, category: "clothing", bestSeller: false, image: "resources/cellImage_1759876783_25.jpg", link: "https://litbuy.com/product/weidian/7644620139?inviteCode=PBYWV0N12" },
+            { name: "Nike SHox TL", price: 45, category: "shoes", bestSeller: false, image: "resources/cellImage_1759876783_26.jpg", link: "https://litbuy.com/product/weidian/7644624041?inviteCode=PBYWV0N12" },
+            { name: "Acne Studios 1996", price: 18, category: "clothing", bestSeller: false, image: "resources/cellImage_1759876783_27.jpg", link: "https://litbuy.com/product/weidian/7647643610?inviteCode=PBYWV0N12" },
+            { name: "Jordan Travis Scott", price: 45, category: "shoes", bestSeller: true, image: "resources/cellImage_1759876783_28.jpg", link: "https://litbuy.com/product/weidian/7647562550?inviteCode=PBYWV0N12" },
+            { name: "Ralph lauren Hoodie", price: 14, category: "clothing", bestSeller: false, image: "resources/cellImage_1759876783_29.jpg", link: "https://litbuy.com/product/weidian/7644637981?inviteCode=PBYWV0N12" },
+            { name: "Dior B30 Budget", price: 66, category: "shoes", bestSeller: false, image: "resources/cellImage_1759876783_30.jpg", link: "https://litbuy.com/product/weidian/7647616138?inviteCode=PBYWV0N12" },
+            { name: "Calvin Klein Hoodie", price: 14, category: "clothing", bestSeller: false, image: "resources/cellImage_1759876783_31.jpg", link: "https://litbuy.com/product/weidian/7647610058?inviteCode=PBYWV0N12" },
+            { name: "Maison Margiela", price: 69, category: "shoes", bestSeller: false, image: "resources/cellImage_1759876783_32.jpg", link: "https://litbuy.com/product/weidian/7647627832?inviteCode=PBYWV0N12" },
+            { name: "Dior Gucci Hoodie", price: 33, category: "clothing", bestSeller: false, image: "resources/cellImage_1759876783_33.jpg", link: "https://litbuy.com/product/weidian/7644596333?inviteCode=PBYWV0N12" },
+            { name: "LV Skate (Repeat)", price: 68, category: "shoes", bestSeller: false, image: "resources/cellImage_1759876783_34.jpg", link: "https://litbuy.com/product/weidian/7644604271?inviteCode=PBYWV0N12" },
+            { name: "Ralph lauren wool", price: 35, category: "clothing", bestSeller: false, image: "resources/cellImage_1759876783_35.jpg", link: "https://litbuy.com/product/weidian/7647493032?inviteCode=PBYWV0N12" },
+            { name: "BALENCIAGA RUNNER", price: 86, category: "shoes", bestSeller: true, image: "resources/cellImage_1759876783_36.jpg", link: "https://litbuy.com/product/weidian/7647548874?inviteCode=PBYWV0N12" },
+            { name: "HELLSTAR hooded", price: 22, category: "clothing", bestSeller: false, image: "resources/cellImage_1759876783_37.jpg", link: "https://litbuy.com/product/weidian/7644592451?inviteCode=PBYWV0N12" },
+            { name: "CL Louis OrlatoF", price: 72, category: "shoes", bestSeller: false, image: "resources/cellImage_1759876783_38.jpg", link: "https://litbuy.com/product/weidian/7644655801?inviteCode=PBYWV0N12" },
+            { name: "Crowe sweatshirt", price: 26, category: "clothing", bestSeller: false, image: "resources/cellImage_1759876783_39.jpg", link: "https://litbuy.com/product/weidian/7644650965?inviteCode=PBYWV0N12" },
+            { name: "Jordan Travis Scott", price: 24, category: "shoes", bestSeller: false, image: "resources/cellImage_1759876783_40.jpg", link: "https://litbuy.com/product/weidian/7647641656?inviteCode=PBYWV0N12" },
+            { name: "Top sweatshirt", price: 19, category: "clothing", bestSeller: false, image: "resources/cellImage_1759876783_40.jpg", link: "https://litbuy.com/product/weidian/7647643602?inviteCode=PBYWV0N12" },
+            { name: "Jordan 4 Budget", price: 23, category: "shoes", bestSeller: false, image: "resources/cellImage_1759876783_41.jpg", link: "https://litbuy.com/product/weidian/7647604042?inviteCode=PBYWV0N12" },
+            { name: "Top sweatshirt", price: 18, category: "clothing", bestSeller: false, image: "resources/cellImage_1759876783_42.jpg", link: "https://litbuy.com/product/weidian/7644588487?inviteCode=PBYWV0N12" },
+            { name: "Dunk SB M Batch", price: 42, category: "shoes", bestSeller: false, image: "resources/cellImage_1759876783_43.jpg", link: "https://litbuy.com/product/weidian/7647513570?inviteCode=PBYWV0N12" },
+            { name: "Stussy x Marc Jacobs", price: 18, category: "clothing", bestSeller: false, image: "resources/cellImage_1759876783_44.jpg", link: "https://litbuy.com/product/weidian/7644590485?inviteCode=PBYWV0N12" },
+            { name: "Asic Gel Top Batch", price: 40, category: "shoes", bestSeller: false, image: "resources/cellImage_1759876783_45.jpg", link: "https://litbuy.com/product/weidian/7647550296?inviteCode=PBYWV0N12" },
+            { name: "Polo Ralph Lauren FW", price: 24, category: "clothing", bestSeller: false, image: "resources/cellImage_1759876783_46.jpg", link: "https://litbuy.com/product/weidian/7647611994?inviteCode=PBYWV0N12" },
+            { name: "Dior B30 Budget", price: 38, category: "shoes", bestSeller: false, image: "resources/cellImage_1759876783_47.jpg", link: "https://litbuy.com/product/weidian/7644645879?inviteCode=PBYWV0N12" },
+            { name: "AMIRI hooded long", price: 28, category: "clothing", bestSeller: false, image: "resources/cellImage_1759876783_48.jpg", link: "https://litbuy.com/product/weidian/7644570315?inviteCode=PBYWV0N12" },
+            { name: "Dior B22 B23", price: 48, category: "shoes", bestSeller: false, image: "resources/cellImage_1759876783_49.jpg", link: "https://litbuy.com/product/weidian/7644541463?inviteCode=PBYWV0N12" },
+            { name: "Ralph Lauren sweatshirt", price: 14, category: "clothing", bestSeller: false, image: "resources/cellImage_1759876783_50.jpg", link: "https://litbuy.com/product/weidian/7647556814?inviteCode=PBYWV0N12" },
+            { name: "Alexander McQueen", price: 40, category: "shoes", bestSeller: false, image: "resources/cellImage_1759876783_51.jpg", link: "https://litbuy.com/product/weidian/7647568454?inviteCode=PBYWV0N12" },
+            { name: "Fashionable Hoodie", price: 21, category: "clothing", bestSeller: false, image: "resources/cellImage_1759876783_52.jpg", link: "https://litbuy.com/product/weidian/7647673924?inviteCode=PBYWV0N12" },
+            { name: "Birkenstocks", price: 39, category: "shoes", bestSeller: false, image: "resources/cellImage_1759876783_53.jpg", link: "https://litbuy.com/product/weidian/7647513568?inviteCode=PBYWV0N12" },
+            { name: "Customized Hoodies", price: 13, category: "clothing", bestSeller: false, image: "resources/cellImage_1759876783_54.jpg", link: "https://litbuy.com/product/weidian/7647551262?inviteCode=PBYWV0N12" },
+            { name: "Uggs Boots", price: 37, category: "shoes", bestSeller: false, image: "resources/cellImage_1759876783_55.jpg", link: "https://litbuy.com/product/weidian/7647570460?inviteCode=PBYWV0N12" },
+            { name: "hip-hop style set", price: 13, category: "clothing", bestSeller: false, image: "resources/cellImage_1759876783_56.jpg", link: "https://litbuy.com/product/weidian/7644619335?inviteCode=PBYWV0N12" },
+            { name: "Timberland LV", price: 36, category: "shoes", bestSeller: false, image: "resources/cellImage_1759876783_57.jpg", link: "https://litbuy.com/product/weidian/7647521462?inviteCode=PBYWV0N12" },
+            { name: "KENZO sweatshirt", price: 15, category: "clothing", bestSeller: false, image: "resources/cellImage_1759876783_58.jpg", link: "https://litbuy.com/product/weidian/7647681914?inviteCode=PBYWV0N12" },
+            { name: "Dunk Low", price: 24, category: "shoes", bestSeller: false, image: "resources/cellImage_1759876783_59.jpg", link: "https://litbuy.com/product/weidian/7644550695?inviteCode=PBYWV0N12" },
+            { name: "SAINTS Hoodie Set", price: 13, category: "clothing", bestSeller: false, image: "resources/cellImage_1759876783_60.jpg", link: "https://litbuy.com/product/weidian/7647673928?inviteCode=PBYWV0N12" },
+            { name: "New Balance 9060", price: 36, category: "shoes", bestSeller: false, image: "resources/cellImage_1759876783_61.jpg", link: "https://litbuy.com/product/weidian/7647637772?inviteCode=PBYWV0N12" },
+            { name: "Paris Saint-Germain", price: 23, category: "clothing", bestSeller: false, image: "resources/cellImage_1759876783_62.jpg", link: "https://litbuy.com/product/weidian/7647670142?inviteCode=PBYWV0N12" },
+            { name: "New Balance 2002r", price: 42, category: "shoes", bestSeller: false, image: "resources/cellImage_1759876783_63.jpg", link: "https://litbuy.com/product/weidian/7647639662?inviteCode=PBYWV0N12" },
+            { name: "Nike sports set", price: 21, category: "clothing", bestSeller: false, image: "resources/cellImage_1759876783_64.jpg", link: "https://litbuy.com/product/weidian/7647677954?inviteCode=PBYWV0N12" },
+            { name: "New Balance 1906r", price: 33, category: "shoes", bestSeller: false, image: "resources/cellImage_1759876783_65.jpg", link: "https://litbuy.com/product/weidian/7647530696?inviteCode=PBYWV0N12" },
+            { name: "AKIMBO Retro", price: 16, category: "clothing", bestSeller: false, image: "resources/cellImage_1759876783_66.jpg", link: "https://litbuy.com/product/weidian/7644605475?inviteCode=PBYWV0N12" },
+            { name: "New Balance 530", price: 31, category: "shoes", bestSeller: false, image: "resources/cellImage_1759876783_67.jpg", link: "https://litbuy.com/product/weidian/7644557269?inviteCode=PBYWV0N12" },
+            { name: "Top sweatshirt", price: 20, category: "clothing", bestSeller: false, image: "resources/cellImage_1759876783_68.jpg", link: "https://litbuy.com/product/weidian/7647530720?inviteCode=PBYWV0N12" },
+            { name: "Yeezy 350 LW", price: 30, category: "shoes", bestSeller: true, image: "resources/cellImage_1759876783_69.jpg", link: "https://litbuy.com/product/weidian/7644631967?inviteCode=PBYWV0N12" },
+            { name: "Top sweatshirt", price: 28, category: "clothing", bestSeller: false, image: "resources/cellImage_1759876783_70.jpg", link: "https://litbuy.com/product/weidian/7647580342?inviteCode=PBYWV0N12" },
+            { name: "Jordan 1 low LJR", price: 41, category: "shoes", bestSeller: false, image: "resources/cellImage_1759876783_71.jpg", link: "https://litbuy.com/product/weidian/7644563087?inviteCode=PBYWV0N12" },
+            { name: "STONE ISLAND Sweat", price: 20, category: "clothing", bestSeller: false, image: "resources/cellImage_1759876783_72.jpg", link: "https://litbuy.com/product/weidian/7647576326?inviteCode=PBYWV0N12" },
+            { name: "Jordan 1 High LJR", price: 52, category: "shoes", bestSeller: false, image: "resources/cellImage_1759876783_73.jpg", link: "https://litbuy.com/product/weidian/7647627830?inviteCode=PBYWV0N12" },
+            { name: "DENIM TEARS SET", price: 22, category: "clothing", bestSeller: false, image: "resources/cellImage_1759876783_74.jpg", link: "https://litbuy.com/product/weidian/7647552800?inviteCode=PBYWV0N12" },
+            { name: "Yezzy Slides", price: 13, category: "shoes", bestSeller: true, image: "resources/cellImage_1759876783_75.jpg", link: "https://litbuy.com/product/weidian/7644630025?inviteCode=PBYWV0N12" },
+            { name: "Denim Tears Hoodies", price: 21, category: "clothing", bestSeller: false, image: "resources/cellImage_1759876783_76.jpg", link: "https://litbuy.com/product/weidian/7644586499?inviteCode=PBYWV0N12" },
+            { name: "Nocta Hot Step", price: 54, category: "shoes", bestSeller: false, image: "resources/cellImage_1759876783_77.jpg", link: "https://litbuy.com/product/weidian/7647600100?inviteCode=PBYWV0N12" },
+            { name: "Top sweatshirt", price: 22, category: "clothing", bestSeller: false, image: "resources/cellImage_1759876783_78.jpg", link: "https://litbuy.com/product/weidian/7647525412?inviteCode=PBYWV0N12" },
+            { name: "LV Trainers", price: 47, category: "shoes", bestSeller: false, image: "resources/cellImage_1759876783_79.jpg", link: "https://litbuy.com/product/weidian/7644661651?inviteCode=PBYWV0N12" },
+            { name: "Fashion long sleeves", price: 23, category: "clothing", bestSeller: false, image: "resources/cellImage_1759876783_80.jpg", link: "https://litbuy.com/product/weidian/7647643600?inviteCode=PBYWV0N12" },
+            { name: "Jordan 4 PB Batch", price: 53, category: "shoes", bestSeller: true, image: "resources/cellImage_1759876783_81.jpg", link: "https://litbuy.com/product/weidian/7644641159?inviteCode=PBYWV0N12" },
+            { name: "Dior sweatshirt", price: 20, category: "clothing", bestSeller: false, image: "resources/cellImage_1759876783_82.jpg", link: "https://litbuy.com/product/weidian/7647584296?inviteCode=PBYWV0N12" },
+            { name: "PRADA America's cup", price: 50, category: "shoes", bestSeller: false, image: "resources/cellImage_1759876783_83.jpg", link: "https://litbuy.com/product/weidian/7647558236?inviteCode=PBYWV0N12" },
+            { name: "Ralph Lauren hooded", price: 19, category: "clothing", bestSeller: false, image: "resources/cellImage_1759876783_84.jpg", link: "https://litbuy.com/product/weidian/7644661681?inviteCode=PBYWV0N12" },
+            { name: "Dior B22 Top PK", price: 68, category: "shoes", bestSeller: false, image: "resources/cellImage_1759876783_85.jpg", link: "https://litbuy.com/product/weidian/7647623198?inviteCode=PBYWV0N12" },
+            { name: "Nike Fashion Hoodie", price: 24, category: "clothing", bestSeller: false, image: "resources/cellImage_1759876783_86.jpg", link: "https://litbuy.com/product/weidian/7647621992?inviteCode=PBYWV0N12" },
+            { name: "PUMA Speedcat", price: 35, category: "shoes", bestSeller: false, image: "resources/cellImage_1759876783_87.jpg", link: "https://litbuy.com/product/weidian/7647597378?inviteCode=PBYWV0N12" },
+            { name: "SynaWord Hoodie", price: 24, category: "clothing", bestSeller: false, image: "resources/cellImage_1759876783_88.jpg", link: "https://litbuy.com/product/weidian/7647535356?inviteCode=PBYWV0N12" },
+            { name: "Adidas Samba", price: 31, category: "shoes", bestSeller: false, image: "resources/cellImage_1759876783_89.jpg", link: "https://litbuy.com/product/weidian/7644644675?inviteCode=PBYWV0N12" },
+            { name: "Chrome Heart Hoodie", price: 21, category: "clothing", bestSeller: false, image: "resources/cellImage_1759876783_90.jpg", link: "https://litbuy.com/product/weidian/7647550314?inviteCode=PBYWV0N12" },
+            { name: "Adidas Campus", price: 31, category: "shoes", bestSeller: false, image: "resources/cellImage_1759876783_91.jpg", link: "https://litbuy.com/product/weidian/7644614145?inviteCode=PBYWV0N12" },
+            { name: "SynaWord Hoodie", price: 16, category: "clothing", bestSeller: false, image: "resources/cellImage_1759876783_92.jpg", link: "https://litbuy.com/product/weidian/7644545409?inviteCode=PBYWV0N12" },
+            { name: "Nike ReactX", price: 22, category: "shoes", bestSeller: false, image: "resources/cellImage_1759876783_93.jpg", link: "https://litbuy.com/product/weidian/7644545381?inviteCode=PBYWV0N12" },
+            { name: "Cars*Crocs", price: 18, category: "shoes", bestSeller: false, image: "resources/cellImage_1759876783_94.jpg", link: "https://litbuy.com/product/weidian/7644645877?inviteCode=PBYWV0N12" },
+            { name: "LV Fashion Jacket", price: 70, category: "clothing", bestSeller: true, image: "resources/cellImage_1759876783_95.jpg", link: "https://litbuy.com/product/weidian/7647592184?inviteCode=PBYWV0N12" },
+            { name: "Hermes shoes", price: 72, category: "shoes", bestSeller: false, image: "resources/cellImage_1759876783_96.jpg", link: "https://litbuy.com/product/weidian/7644545379?inviteCode=PBYWV0N12" },
+            { name: "Moose Knuckles", price: 100, category: "clothing", bestSeller: true, image: "resources/cellImage_1759876783_97.jpg", link: "https://litbuy.com/product/weidian/7647517596?inviteCode=PBYWV0N12" },
+            { name: "HOKA ONE Clifton 9", price: 36, category: "shoes", bestSeller: false, image: "resources/cellImage_1759876783_98.jpg", link: "https://litbuy.com/product/weidian/7644586471?inviteCode=PBYWV0N12" },
+            { name: "THE NORTH FACE 1996", price: 49, category: "clothing", bestSeller: true, image: "resources/cellImage_1759876783_99.jpg", link: "https://litbuy.com/product/weidian/7644557297?inviteCode=PBYWV0N12" },
+            { name: "Jordan 3 GX", price: 44, category: "shoes", bestSeller: false, image: "resources/cellImage_1759876783_100.jpg", link: "https://litbuy.com/product/weidian/7647523454?inviteCode=PBYWV0N12" },
+            { name: "Canada Goose", price: 49, category: "clothing", bestSeller: false, image: "resources/cellImage_1759876783_101.jpg", link: "https://litbuy.com/product/weidian/7644631989?inviteCode=PBYWV0N12" },
+            { name: "Jordan 11 LJR", price: 44, category: "shoes", bestSeller: false, image: "resources/cellImage_1759876783_102.jpg", link: "https://litbuy.com/product/weidian/7644553371?inviteCode=PBYWV0N12" },
+            { name: "lululemon down jacket", price: 52, category: "clothing", bestSeller: false, image: "resources/cellImage_1759876783_103.jpg", link: "https://litbuy.com/product/weidian/7647594172?inviteCode=PBYWV0N12" },
+            { name: "Jordan 5 LJR", price: 50, category: "shoes", bestSeller: false, image: "resources/cellImage_1759876783_104.jpg", link: "https://litbuy.com/product/weidian/7644568867?inviteCode=PBYWV0N12" },
+            { name: "Moncler Vests", price: 35, category: "clothing", bestSeller: false, image: "resources/cellImage_1759876783_105.jpg", link: "https://litbuy.com/product/weidian/7647564564?inviteCode=PBYWV0N12" },
+            { name: "Balenciaga Triple S", price: 53, category: "shoes", bestSeller: false, image: "resources/cellImage_1759876783_106.jpg", link: "https://litbuy.com/product/weidian/7644661649?inviteCode=PBYWV0N12" },
+            { name: "Top sweatshirt", price: 38, category: "clothing", bestSeller: false, image: "resources/cellImage_1759876783_107.jpg", link: "https://litbuy.com/product/weidian/7644578225?inviteCode=PBYWV0N12" },
+            { name: "Bapesta", price: 45, category: "shoes", bestSeller: false, image: "resources/cellImage_1759876783_108.jpg", link: "https://litbuy.com/product/weidian/7647540524?inviteCode=PBYWV0N12" },
+            { name: "LV baseball jacket", price: 52, category: "clothing", bestSeller: true, image: "resources/cellImage_1759876783_109.jpg", link: "https://litbuy.com/product/weidian/7647547070?inviteCode=PBYWV0N12" },
+            { name: "AMIRI Skel-Top Low", price: 37, category: "shoes", bestSeller: false, image: "resources/cellImage_1759876783_110.jpg", link: "https://litbuy.com/product/weidian/7647548868?inviteCode=PBYWV0N12" },
+            { name: "The North Face Jackets", price: 39, category: "clothing", bestSeller: true, image: "resources/cellImage_1759876783_111.jpg", link: "https://litbuy.com/product/weidian/7647587972?inviteCode=PBYWV0N12" },
+            { name: "Air Force 1 High", price: 24, category: "shoes", bestSeller: false, image: "resources/cellImage_1759876783_112.jpg", link: "https://litbuy.com/product/weidian/7644588447?inviteCode=PBYWV0N12" },
+            { name: "Top sweatshirt", price: 15, category: "clothing", bestSeller: false, image: "resources/cellImage_1759876783_113.jpg", link: "https://litbuy.com/product/weidian/7644568897?inviteCode=PBYWV0N12" },
+            { name: "Nike Air Zoom G.T Cut", price: 38, category: "shoes", bestSeller: false, image: "resources/cellImage_1759876783_114.jpg", link: "https://litbuy.com/product/weidian/7644616143?inviteCode=PBYWV0N12" },
+            { name: "Nike Air Max 97", price: 57, category: "shoes", bestSeller: false, image: "resources/cellImage_1759876783_115.jpg", link: "https://litbuy.com/product/weidian/7647529304?inviteCode=PBYWV0N12" },
+            { name: "Denim tears set", price: 12, category: "clothing", bestSeller: false, image: "resources/cellImage_1759876783_116.jpg", link: "https://litbuy.com/product/weidian/7647538538?inviteCode=PBYWV0N12" },
+            { name: "Nike Air", price: 42, category: "shoes", bestSeller: false, image: "resources/cellImage_1759876783_117.jpg", link: "https://litbuy.com/product/weidian/7647535316?inviteCode=PBYWV0N12" },
+            { name: "Ralph lauren polo Tees", price: 14, category: "clothing", bestSeller: false, image: "resources/cellImage_1759876783_118.jpg", link: "https://litbuy.com/product/weidian/7644567067?inviteCode=PBYWV0N12" },
+            { name: "Adidas XLG RUNNER", price: 50, category: "shoes", bestSeller: false, image: "resources/cellImage_1759876783_119.jpg", link: "https://litbuy.com/product/weidian/7644647823?inviteCode=PBYWV0N12" },
+            { name: "LACOSTE Polo", price: 16, category: "clothing", bestSeller: false, image: "resources/cellImage_1759876783_120.jpg", link: "https://litbuy.com/product/weidian/7647558226?inviteCode=PBYWV0N12" },
+            { name: "Nike P-6000", price: 34, category: "shoes", bestSeller: false, image: "resources/cellImage_1759876783_121.jpg", link: "https://litbuy.com/product/weidian/7644631965?inviteCode=PBYWV0N12" },
+            { name: "Ralph Lauren T-shirt", price: 14, category: "clothing", bestSeller: false, image: "resources/cellImage_1759876783_122.jpg", link: "https://litbuy.com/product/weidian/7647637804?inviteCode=PBYWV0N12" },
+            { name: "Jordan 11 Budget", price: 23, category: "shoes", bestSeller: false, image: "resources/cellImage_1759876783_123.jpg", link: "https://litbuy.com/product/weidian/7644614141?inviteCode=PBYWV0N12" },
+            { name: "Corteiz T-Shirts", price: 13, category: "clothing", bestSeller: false, image: "resources/cellImage_1759876783_123.jpg", link: "https://litbuy.com/product/weidian/7644637961?inviteCode=PBYWV0N12" },
+            { name: "Balenciaga Track", price: 60, category: "shoes", bestSeller: false, image: "resources/cellImage_1759876783_124.jpg", link: "https://litbuy.com/product/weidian/7644626051?inviteCode=PBYWV0N12" },
+            { name: "Corteiz T-Shirts", price: 13, category: "clothing", bestSeller: false, image: "resources/cellImage_1759876783_125.jpg", link: "https://litbuy.com/product/weidian/7647600134?inviteCode=PBYWV0N12" },
+            { name: "BALENCIAGA TRACK1.0", price: 82, category: "shoes", bestSeller: true, image: "resources/cellImage_1759876783_126.jpg", link: "https://litbuy.com/product/weidian/7644510997?inviteCode=PBYWV0N12" },
+            { name: "LOUIS VUITTON T-Shirts", price: 15, category: "clothing", bestSeller: false, image: "resources/cellImage_1759876783_127.jpg", link: "https://litbuy.com/product/weidian/7647635828?inviteCode=PBYWV0N12" },
+            { name: "Onitsuka Tiger", price: 32, category: "shoes", bestSeller: false, image: "resources/cellImage_1759876783_128.jpg", link: "https://litbuy.com/product/weidian/7644547423?inviteCode=PBYWV0N12" },
+            { name: "Travis Scott T-shirts", price: 15, category: "clothing", bestSeller: false, image: "resources/cellImage_1759876783_129.jpg", link: "https://litbuy.com/product/weidian/7647641678?inviteCode=PBYWV0N12" },
+            { name: "OFF-WHITE shoes", price: 86, category: "shoes", bestSeller: false, image: "resources/cellImage_1759876783_130.jpg", link: "https://litbuy.com/product/weidian/7644580615?inviteCode=PBYWV0N12" },
+            { name: "T-shirts", price: 14, category: "clothing", bestSeller: false, image: "resources/cellImage_1759876783_131.jpg", link: "https://litbuy.com/product/weidian/7647558224?inviteCode=PBYWV0N12" },
+            { name: "New Balance 5327", price: 31, category: "shoes", bestSeller: false, image: "resources/cellImage_1759876783_132.jpg", link: "https://litbuy.com/product/weidian/7647523450?inviteCode=PBYWV0N12" },
+            { name: "Top T-shirts", price: 17, category: "clothing", bestSeller: false, image: "resources/cellImage_1759876783_133.jpg", link: "https://litbuy.com/product/weidian/7644558535?inviteCode=PBYWV0N12" },
+            { name: "Golden Goose", price: 58, category: "shoes", bestSeller: false, image: "resources/cellImage_1759876783_134.jpg", link: "https://litbuy.com/product/weidian/7644594401?inviteCode=PBYWV0N12" },
+            { name: "24-25 football uniform", price: 11, category: "clothing", bestSeller: false, image: "resources/cellImage_1759876783_135.jpg", link: "https://litbuy.com/product/weidian/7647594170?inviteCode=PBYWV0N12" },
+            { name: "RICK OWENS", price: 62, category: "shoes", bestSeller: false, image: "resources/cellImage_1759876783_136.jpg", link: "https://litbuy.com/product/weidian/7644641951?inviteCode=PBYWV0N12" },
+            { name: "Football jersey", price: 7, category: "clothing", bestSeller: false, image: "resources/cellImage_1759876783_137.jpg", link: "https://litbuy.com/product/weidian/7647592178?inviteCode=PBYWV0N12" },
+            { name: "Maison Mihara Yashuiro", price: 68, category: "shoes", bestSeller: false, image: "resources/cellImage_1759876783_138.jpg", link: "https://litbuy.com/product/weidian/7647537268?inviteCode=PBYWV0N12" },
+            { name: "Paul polo shirt", price: 16, category: "clothing", bestSeller: false, image: "resources/cellImage_1759876783_139.jpg", link: "https://litbuy.com/product/weidian/7644580647?inviteCode=PBYWV0N12" },
+            { name: "Converse + cdg", price: 18, category: "shoes", bestSeller: false, image: "resources/cellImage_1759876783_140.jpg", link: "https://litbuy.com/product/weidian/7644657761?inviteCode=PBYWV0N12" },
+            { name: "Ralph lauren polo", price: 14, category: "clothing", bestSeller: false, image: "resources/cellImage_1759876783_141.jpg", link: "https://litbuy.com/product/weidian/7647572446?inviteCode=PBYWV0N12" },
+            { name: "Yeezy 500 LW", price: 55, category: "shoes", bestSeller: false, image: "resources/cellImage_1759876783_142.jpg", link: "https://litbuy.com/product/weidian/7644655795?inviteCode=PBYWV0N12" },
+            { name: "LACOSTE Short Sleeve", price: 23, category: "clothing", bestSeller: false, image: "resources/cellImage_1759876783_143.jpg", link: "https://litbuy.com/product/weidian/7647547068?inviteCode=PBYWV0N12" },
+            { name: "Yeezy 700 LW", price: 52, category: "shoes", bestSeller: false, image: "resources/cellImage_1759876783_144.jpg", link: "https://litbuy.com/product/weidian/7644533561?inviteCode=PBYWV0N12" },
+            { name: "Louis Vuitton T-shirts", price: 12, category: "clothing", bestSeller: false, image: "resources/cellImage_1759876783_145.jpg", link: "https://litbuy.com/product/weidian/7647560648?inviteCode=PBYWV0N12" },
+            { name: "Balenciaga 10XL", price: 52, category: "shoes", bestSeller: false, image: "resources/cellImage_1759876783_146.jpg", link: "https://litbuy.com/product/weidian/7647617928?inviteCode=PBYWV0N12" },
+            { name: "Dior T-shirts", price: 12, category: "clothing", bestSeller: false, image: "resources/cellImage_1759876783_147.jpg", link: "https://litbuy.com/product/weidian/7647564562?inviteCode=PBYWV0N12" },
+            { name: "Lanvin Curb", price: 56, category: "shoes", bestSeller: false, image: "resources/cellImage_1759876783_148.jpg", link: "https://litbuy.com/product/weidian/7644541455?inviteCode=PBYWV0N12" },
+            { name: "Balenciaga T-shirts", price: 15, category: "clothing", bestSeller: false, image: "resources/cellImage_1759876783_149.jpg", link: "https://litbuy.com/product/weidian/7644578221?inviteCode=PBYWV0N12" },
+            { name: "GUCCI leather shoes", price: 62, category: "shoes", bestSeller: false, image: "resources/cellImage_1759876783_150.jpg", link: "https://litbuy.com/product/weidian/7647584264?inviteCode=PBYWV0N12" },
+            { name: "Corteiz T-Shirts", price: 14, category: "clothing", bestSeller: false, image: "resources/cellImage_1759876783_151.jpg", link: "https://litbuy.com/product/weidian/7647519506?inviteCode=PBYWV0N12" },
+            { name: "NBA Socks", price: 2, category: "accessories", bestSeller: false, image: "resources/cellImage_1759876783_152.jpg", link: "https://litbuy.com/product/weidian/7644571307?inviteCode=PBYWV0N12" },
+            { name: "Louis Vuitton T-shirts", price: 13, category: "clothing", bestSeller: false, image: "resources/cellImage_1759876783_153.jpg", link: "https://litbuy.com/product/weidian/7647568482?inviteCode=PBYWV0N12" },
+            { name: "BAPE Socks", price: 3, category: "accessories", bestSeller: false, image: "resources/cellImage_1759876783_154.jpg", link: "https://litbuy.com/product/weidian/7647695752?inviteCode=PBYWV0N12" },
+            { name: "Dior T-shirts", price: 13, category: "clothing", bestSeller: false, image: "resources/cellImage_1759876783_155.jpg", link: "https://litbuy.com/product/weidian/7644628075?inviteCode=PBYWV0N12" },
+            { name: "Balenciaga T-shirts", price: 13, category: "clothing", bestSeller: false, image: "resources/cellImage_1759876783_156.jpg", link: "https://litbuy.com/product/weidian/7644558533?inviteCode=PBYWV0N12" },
+            { name: "Nike Backpack", price: 16, category: "accessories", bestSeller: false, image: "resources/cellImage_1759876783_157.jpg", link: "https://litbuy.com/product/weidian/7647592168?inviteCode=PBYWV0N12" },
+            { name: "Corteiz T-shirts", price: 14, category: "clothing", bestSeller: false, image: "resources/cellImage_1759876783_158.jpg", link: "https://litbuy.com/product/weidian/7644568895?inviteCode=PBYWV0N12" },
+            { name: "LV backpack", price: 26, category: "accessories", bestSeller: false, image: "resources/cellImage_1759876783_159.jpg", link: "https://litbuy.com/product/weidian/7644653821?inviteCode=PBYWV0N12" },
+            { name: "Top T-shirts", price: 17, category: "clothing", bestSeller: false, image: "resources/cellImage_1759876783_160.jpg", link: "https://litbuy.com/product/weidian/7647538534?inviteCode=PBYWV0N12" },
+            { name: "CHANEL backpack", price: 45, category: "accessories", bestSeller: false, image: "resources/cellImage_1759876783_161.jpg", link: "https://litbuy.com/product/weidian/7647538522?inviteCode=PBYWV0N12" },
+            { name: "C.P Company T-shirts", price: 14, category: "clothing", bestSeller: false, image: "resources/cellImage_1759876783_162.jpg", link: "https://litbuy.com/product/weidian/7647578312?inviteCode=PBYWV0N12" },
+            { name: "Goyard Card Holders", price: 8, category: "accessories", bestSeller: false, image: "resources/cellImage_1759876783_163.jpg", link: "https://litbuy.com/product/weidian/7644574789?inviteCode=PBYWV0N12" },
+            { name: "GUCCI T-shirts", price: 12, category: "clothing", bestSeller: false, image: "resources/cellImage_1759876783_164.jpg", link: "https://litbuy.com/product/weidian/7647629820?inviteCode=PBYWV0N12" },
+            { name: "Fashionable wallets", price: 13, category: "accessories", bestSeller: false, image: "resources/cellImage_1759876783_165.jpg", link: "https://litbuy.com/product/weidian/7644641977?inviteCode=PBYWV0N12" },
+            { name: "BAPE x Inter Miami", price: 15, category: "clothing", bestSeller: false, image: "resources/cellImage_1759876783_166.jpg", link: "https://litbuy.com/product/weidian/7644647847?inviteCode=PBYWV0N12" },
+            { name: "Louis Vuitton Holders", price: 13, category: "accessories", bestSeller: false, image: "resources/cellImage_1759876783_167.jpg", link: "https://litbuy.com/product/weidian/7644549327?inviteCode=PBYWV0N12" },
+            { name: "PRADA T-shirts", price: 12, category: "clothing", bestSeller: false, image: "resources/cellImage_1759876783_168.jpg", link: "https://litbuy.com/product/weidian/7644547443?inviteCode=PBYWV0N12" },
+            { name: "Hermes belt", price: 14, category: "accessories", bestSeller: false, image: "resources/cellImage_1759876783_169.jpg", link: "https://litbuy.com/product/weidian/7644572787?inviteCode=PBYWV0N12" },
+            { name: "Givenchy T-shirts", price: 12, category: "clothing", bestSeller: false, image: "resources/cellImage_1759876783_170.jpg", link: "https://litbuy.com/product/weidian/7647548896?inviteCode=PBYWV0N12" },
+            { name: "LV Initiales", price: 12, category: "accessories", bestSeller: false, image: "resources/cellImage_1759876783_171.jpg", link: "https://litbuy.com/product/weidian/7647621978?inviteCode=PBYWV0N12" },
+            { name: "Moncler T-shirts", price: 12, category: "clothing", bestSeller: false, image: "resources/cellImage_1759876783_172.jpg", link: "https://litbuy.com/product/weidian/7647600130?inviteCode=PBYWV0N12" },
+            { name: "LV Initiales", price: 12, category: "accessories", bestSeller: false, image: "resources/cellImage_1759876783_173.jpg", link: "https://litbuy.com/product/weidian/7644653819?inviteCode=PBYWV0N12" },
+            { name: "CHANEL T-shirts", price: 12, category: "clothing", bestSeller: false, image: "resources/cellImage_1759876783_174.jpg", link: "https://litbuy.com/product/weidian/7647513592?inviteCode=PBYWV0N12" },
+            { name: "GUCCI belt", price: 12, category: "accessories", bestSeller: false, image: "resources/cellImage_1759876783_175.jpg", link: "https://litbuy.com/product/weidian/7647552788?inviteCode=PBYWV0N12" },
+            { name: "Stussy T-shirts", price: 17, category: "clothing", bestSeller: false, image: "resources/cellImage_1759876783_176.jpg", link: "https://litbuy.com/product/weidian/7647611986?inviteCode=PBYWV0N12" },
+            { name: "LV Initiales", price: 18, category: "accessories", bestSeller: false, image: "resources/cellImage_1759876783_177.jpg", link: "https://litbuy.com/product/weidian/7647580328?inviteCode=PBYWV0N12" },
+            { name: "The North Face short", price: 15, category: "clothing", bestSeller: false, image: "resources/cellImage_1759876783_178.jpg", link: "https://litbuy.com/product/weidian/7644641983?inviteCode=PBYWV0N12" },
+            { name: "LOUIS VUITTON Belt", price: 13, category: "accessories", bestSeller: false, image: "resources/cellImage_1759876783_179.jpg", link: "https://litbuy.com/product/weidian/7647533394?inviteCode=PBYWV0N12" },
+            { name: "The North Face short", price: 16, category: "clothing", bestSeller: false, image: "resources/cellImage_1759876783_180.jpg", link: "https://litbuy.com/product/weidian/7644606273?inviteCode=PBYWV0N12" },
+            { name: "Fashion Belts", price: 15, category: "accessories", bestSeller: false, image: "resources/cellImage_1759876783_181.jpg", link: "https://litbuy.com/product/weidian/7644545395?inviteCode=PBYWV0N12" },
+            { name: "Top T-shirts", price: 14, category: "clothing", bestSeller: false, image: "resources/cellImage_1759876783_182.jpg", link: "https://litbuy.com/product/weidian/7644649817?inviteCode=PBYWV0N12" },
+            { name: "LOUIS VUITTON Belt", price: 10, category: "accessories", bestSeller: false, image: "resources/cellImage_1759876783_183.jpg", link: "https://litbuy.com/product/weidian/7647602128?inviteCode=PBYWV0N12" },
+            { name: "Top T-shirts", price: 14, category: "clothing", bestSeller: false, image: "resources/cellImage_1759876783_184.jpg", link: "https://litbuy.com/product/weidian/7644584553?inviteCode=PBYWV0N12" },
+            { name: "TOM FORD", price: 18, category: "accessories", bestSeller: false, image: "resources/cellImage_1759876783_185.jpg", link: "https://litbuy.com/product/weidian/7644624051?inviteCode=PBYWV0N12" },
+            { name: "Top T-shirts", price: 15, category: "clothing", bestSeller: false, image: "resources/cellImage_1759876783_186.jpg", link: "https://litbuy.com/product/weidian/7647548892?inviteCode=PBYWV0N12" },
+            { name: "FERRAGAMO Belt", price: 18, category: "accessories", bestSeller: false, image: "resources/cellImage_1759876783_187.jpg", link: "https://litbuy.com/product/weidian/7647584284?inviteCode=PBYWV0N12" },
+            { name: "Top T-shirts", price: 15, category: "clothing", bestSeller: false, image: "resources/cellImage_1759876783_188.jpg", link: "https://litbuy.com/product/weidian/7644592441?inviteCode=PBYWV0N12" },
+            { name: "Hermès belt", price: 18, category: "accessories", bestSeller: false, image: "resources/cellImage_1759876783_189.jpg", link: "https://litbuy.com/product/weidian/7647558218?inviteCode=PBYWV0N12" },
+            { name: "Top T-shirts", price: 15, category: "clothing", bestSeller: false, image: "resources/cellImage_1759876783_190.jpg", link: "https://litbuy.com/product/weidian/7647525404?inviteCode=PBYWV0N12" },
+            { name: "Apple Watch", price: 58, category: "accessories", bestSeller: false, image: "resources/cellImage_1759876783_191.jpg", link: "https://litbuy.com/product/weidian/7647584284?inviteCode=PBYWV0N12" },
+            { name: "Top fashion watches", price: 54, category: "accessories", bestSeller: false, image: "resources/cellImage_1759876783_192.jpg", link: "https://litbuy.com/product/weidian/7647529326?inviteCode=PBYWV0N12" },
+            { name: "Printed jeans", price: 19, category: "clothing", bestSeller: false, image: "resources/cellImage_1759876783_193.jpg", link: "https://litbuy.com/product/weidian/7647592172?inviteCode=PBYWV0N12" },
+            { name: "Top fashion watches", price: 60, category: "accessories", bestSeller: false, image: "resources/cellImage_1759876783_194.jpg", link: "https://litbuy.com/product/weidian/7644570303?inviteCode=PBYWV0N12" },
+            { name: "GalleryDeptJeans", price: 16, category: "clothing", bestSeller: false, image: "resources/cellImage_1759876783_195.jpg", link: "https://litbuy.com/product/weidian/7644637957?inviteCode=PBYWV0N12" },
+            { name: "Top version ring", price: 12, category: "accessories", bestSeller: false, image: "resources/cellImage_1759876783_196.jpg", link: "https://litbuy.com/product/weidian/7647596162?inviteCode=PBYWV0N12" },
+            { name: "Printed jeans", price: 32, category: "clothing", bestSeller: false, image: "resources/cellImage_1759876783_197.jpg", link: "https://litbuy.com/product/weidian/7647611984?inviteCode=PBYWV0N12" },
+            { name: "Fashion Bracelet", price: 24, category: "accessories", bestSeller: false, image: "resources/cellImage_1759876783_198.jpg", link: "https://litbuy.com/product/weidian/7647535334?inviteCode=PBYWV0N12" },
+            { name: "LV Bracelets", price: 21, category: "accessories", bestSeller: false, image: "resources/cellImage_1759876783_199.jpg", link: "https://litbuy.com/product/weidian/7644563103?inviteCode=PBYWV0N12" },
+            { name: "Hip-hop jeans", price: 14, category: "clothing", bestSeller: false, image: "resources/cellImage_1759876783_200.jpg", link: "https://litbuy.com/product/weidian/7647578306?inviteCode=PBYWV0N12" },
+            { name: "Polo Ralph Shorts", price: 16, category: "clothing", bestSeller: false, image: "resources/cellImage_1759876783_201.jpg", link: "https://litbuy.com/product/weidian/7647600124?inviteCode=PBYWV0N12" },
+            { name: "Top hat", price: 7, category: "accessories", bestSeller: false, image: "resources/cellImage_1759876783_202.jpg", link: "https://litbuy.com/product/weidian/7644574787?inviteCode=PBYWV0N12" },
+            { name: "Nike sports pants", price: 20, category: "clothing", bestSeller: false, image: "resources/cellImage_1759876783_203.jpg", link: "https://litbuy.com/product/weidian/7647574428?inviteCode=PBYWV0N12" },
+            { name: "Top hat", price: 11, category: "accessories", bestSeller: false, image: "resources/cellImage_1759876783_204.jpg", link: "https://litbuy.com/product/weidian/7644580631?inviteCode=PBYWV0N12" },
+            { name: "Casual Baba Shorts", price: 22, category: "clothing", bestSeller: false, image: "resources/cellImage_1759876783_205.jpg", link: "https://litbuy.com/product/weidian/7644620121?inviteCode=PBYWV0N12" },
+            { name: "Top hat", price: 8, category: "accessories", bestSeller: false, image: "resources/cellImage_1759876783_206.jpg", link: "https://litbuy.com/product/weidian/7644628051?inviteCode=PBYWV0N12" },
+            { name: "Fashion shorts", price: 15, category: "clothing", bestSeller: false, image: "resources/cellImage_1759876783_207.jpg", link: "https://litbuy.com/product/weidian/7644592437?inviteCode=PBYWV0N12" },
+            { name: "LV winter hat", price: 8, category: "accessories", bestSeller: false, image: "resources/cellImage_1759876783_208.jpg", link: "https://litbuy.com/product/weidian/7644563095?inviteCode=PBYWV0N12" },
+            { name: "Fashion shorts", price: 15, category: "clothing", bestSeller: false, image: "resources/cellImage_1759876783_209.jpg", link: "https://litbuy.com/product/weidian/7647540540?inviteCode=PBYWV0N12" },
+            { name: "Stussy winter hat", price: 12, category: "accessories", bestSeller: false, image: "resources/cellImage_1759876783_210.jpg", link: "https://litbuy.com/product/weidian/7647576306?inviteCode=PBYWV0N12" },
+            { name: "Casual Baba Shorts", price: 14, category: "clothing", bestSeller: false, image: "resources/cellImage_1759876783_211.jpg", link: "https://litbuy.com/product/weidian/7644604285?inviteCode=PBYWV0N12" },
+            { name: "Supreme winter hat", price: 14, category: "accessories", bestSeller: false, image: "resources/cellImage_1759876783_212.jpg", link: "https://litbuy.com/product/weidian/7644563093?inviteCode=PBYWV0N12" },
+            { name: "The North Face Hat", price: 8, category: "accessories", bestSeller: false, image: "resources/cellImage_1759876783_213.jpg", link: "https://litbuy.com/product/weidian/7647562558?inviteCode=PBYWV0N12" },
+            { name: "Supreme underwear", price: 6, category: "clothing", bestSeller: false, image: "resources/cellImage_1759876783_214.jpg", link: "https://litbuy.com/product/weidian/7644584547?inviteCode=PBYWV0N12" },
+            { name: "Burberry Hat", price: 8, category: "accessories", bestSeller: false, image: "resources/cellImage_1759876783_215.jpg", link: "https://litbuy.com/product/weidian/7644645889?inviteCode=PBYWV0N12" },
+            { name: "Animal baseball cap", price: 8, category: "accessories", bestSeller: false, image: "resources/cellImage_1759876783_216.jpg", link: "https://litbuy.com/product/weidian/7647613948?inviteCode=PBYWV0N12" },
+            { name: "Chanel perfume", price: 30, category: "accessories", bestSeller: false, image: "resources/cellImage_1759876783_217.jpg", link: "https://litbuy.com/product/weidian/7644651795?inviteCode=PBYWV0N12" },
+            { name: "Acne Studios scarf", price: 13, category: "accessories", bestSeller: false, image: "resources/cellImage_1759876783_218.jpg", link: "https://litbuy.com/product/weidian/7644596303?inviteCode=PBYWV0N12" },
+            { name: "Dior Men Fragrance", price: 30, category: "accessories", bestSeller: false, image: "resources/cellImage_1759876783_219.jpg", link: "https://litbuy.com/product/weidian/7647635808?inviteCode=PBYWV0N12" },
+            { name: "Acne Studios scarf", price: 13, category: "accessories", bestSeller: false, image: "resources/cellImage_1759876783_220.jpg", link: "https://litbuy.com/product/weidian/7644641967?inviteCode=PBYWV0N12" },
+            { name: "Valentino perfume", price: 28, category: "accessories", bestSeller: false, image: "resources/cellImage_1759876783_221.jpg", link: "https://litbuy.com/product/weidian/7644576791?inviteCode=PBYWV0N12" },
+            { name: "LV warm scarf", price: 20, category: "accessories", bestSeller: false, image: "resources/cellImage_1759876783_222.jpg", link: "https://litbuy.com/product/weidian/7647606068?inviteCode=PBYWV0N12" },
+            { name: "Dior Women Fragrance", price: 30, category: "accessories", bestSeller: false, image: "resources/cellImage_1759876783_223.jpg", link: "https://litbuy.com/product/weidian/7647517568?inviteCode=PBYWV0N12" },
+            { name: "Burberry scarf", price: 13, category: "accessories", bestSeller: false, image: "resources/cellImage_1759876783_224.jpg", link: "https://litbuy.com/product/weidian/7647615964?inviteCode=PBYWV0N12" },
+            { name: "Carolina Herrera", price: 28, category: "accessories", bestSeller: false, image: "resources/cellImage_1759876783_225.jpg", link: "https://litbuy.com/product/weidian/7644584535?inviteCode=PBYWV0N12" },
+            { name: "Chanel Men perfume", price: 28, category: "accessories", bestSeller: false, image: "resources/cellImage_1759876783_226.jpg", link: "https://litbuy.com/product/weidian/7644661659?inviteCode=PBYWV0N12" },
+            { name: "Airpods Pro 2", price: 9, category: "accessories", bestSeller: true, image: "resources/cellImage_1759876783_227.jpg", link: "https://litbuy.com/product/weidian/7644598291?inviteCode=PBYWV0N12" },
+            { name: "Saint Laurent", price: 30, category: "accessories", bestSeller: false, image: "resources/cellImage_1759876783_228.jpg", link: "https://litbuy.com/product/weidian/7644657777?inviteCode=PBYWV0N12" },
+            { name: "JBL PULSE5", price: 30, category: "accessories", bestSeller: false, image: "resources/cellImage_1759876783_229.jpg", link: "https://litbuy.com/product/weidian/7644533575?inviteCode=PBYWV0N12" },
+            { name: "CREED Men perfume", price: 31, category: "accessories", bestSeller: false, image: "resources/cellImage_1759876783_230.jpg", link: "https://litbuy.com/product/weidian/7644614149?inviteCode=PBYWV0N12" },
+            { name: "Boutique Headphones", price: 18, category: "accessories", bestSeller: false, image: "resources/cellImage_1759876783_231.jpg", link: "https://litbuy.com/product/weidian/7647590202?inviteCode=PBYWV0N12" },
+            { name: "Louis Vuitton perfume", price: 56, category: "accessories", bestSeller: false, image: "resources/cellImage_1759876783_231.jpg", link: "https://litbuy.com/product/weidian/7644618093?inviteCode=PBYWV0N12" },
+            
+        ];
+
+        // --- RENDER LOGIC ---
+
+        function createCard(product) {
+            return `
+                <div class="product-card bg-slate-800 rounded-xl overflow-hidden border border-slate-700 relative group animate-fade-in-up flex flex-col h-full">
+                    <div class="absolute top-3 left-3 z-20 flex gap-2">
+                        ${product.bestSeller ? '<span class="bg-yellow-500 text-black text-[10px] font-bold px-2 py-1 rounded uppercase tracking-wider shadow-lg">Best Seller</span>' : ''}
+                    </div>
+                    
+                    <div class="h-64 md:h-72 overflow-hidden relative bg-slate-900 flex-shrink-0">
+                        <img src="${product.image}" alt="${product.name}" class="w-full h-full object-cover transform group-hover:scale-110 transition duration-700" onerror="this.onerror=null; this.src='https://via.placeholder.com/300x400?text=No+Image';">
+                        
+                        <!-- Hover Overlay with BUY NOW button -->
+                        <div class="absolute inset-0 bg-black/70 opacity-0 group-hover:opacity-100 transition duration-300 flex items-center justify-center backdrop-blur-sm z-30">
+                            <a href="${product.link}" target="_blank" class="bg-yellow-500 text-black px-8 py-3 rounded-full font-bold hover:bg-white hover:text-black transition transform translate-y-4 group-hover:translate-y-0 shadow-xl uppercase text-sm tracking-wide">
+                                Buy Now
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="p-5 flex-grow flex flex-col justify-between relative bg-cardbg">
+                        <div>
+                            <div class="text-[10px] text-gray-400 uppercase tracking-widest mb-2 font-bold opacity-60">${product.category}</div>
+                            <!-- Product Name acts as a link too -->
+                            <a href="${product.link}" target="_blank" class="hover:text-yellow-400 transition block">
+                                <h3 class="font-bold text-lg mb-1 text-white leading-tight">${product.name}</h3>
+                            </a>
+                        </div>
+                        <div class="flex justify-between items-end mt-4 border-t border-slate-700 pt-4">
+                            <div class="flex flex-col">
+                                <span class="text-xs text-gray-500 line-through mb-0.5 text-gray-400">$${Math.floor(product.price * 1.3)}</span>
+                                <span class="text-yellow-400 font-extrabold text-2xl">$${product.price}</span>
+                            </div>
+                            <button class="text-gray-400 hover:text-red-500 transition">
+                                <i class="far fa-heart"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderProducts(filter = 'all', searchTerm = '') {
+            const productContainer = document.getElementById('productGrid');
+            const noResults = document.getElementById('noResults');
+            const bestSellerHeader = document.getElementById('bestSellerHeader');
+
+            // Copy array to avoid mutating original
+            let displayList = [...products];
+
+            // Filter by Category
+            if (filter !== 'all') {
+                if (filter === 'clothing') {
+                     // Group hoodies, t-shirts, jackets into "clothing"
+                     displayList = displayList.filter(p => p.category === 'clothing');
+                } else {
+                    displayList = displayList.filter(p => p.category === filter);
+                }
+            }
+
+            // Filter by Search Term
+            if (searchTerm) {
+                displayList = displayList.filter(p => p.name.toLowerCase().includes(searchTerm.toLowerCase()));
+            }
+
+            // Sort: Best Sellers first (only if no specific sort applied)
+            if (filter === 'all' && !searchTerm) {
+                displayList.sort((a, b) => (b.bestSeller === a.bestSeller) ? 0 : b.bestSeller ? -1 : 1);
+                if(bestSellerHeader) bestSellerHeader.classList.remove('hidden');
+            } else {
+                if(bestSellerHeader) bestSellerHeader.classList.add('hidden');
+            }
+
+            // Render
+            if (displayList.length === 0) {
+                productContainer.innerHTML = '';
+                noResults.classList.remove('hidden');
+            } else {
+                noResults.classList.add('hidden');
+                productContainer.innerHTML = displayList.map(createCard).join('');
+            }
+        }
+
+        // --- EVENT LISTENERS ---
+
+        const searchInput = document.getElementById('searchInput');
+        searchInput.addEventListener('input', (e) => {
+            const term = e.target.value;
+            const activeBtn = document.querySelector('.category-btn.active');
+            const activeCategory = activeBtn ? getCategoryFromBtn(activeBtn) : 'all';
+            renderProducts(activeCategory, term);
+        });
+
+        function filterProducts(category, btnElement) {
+            if (btnElement) {
+                document.querySelectorAll('.category-btn').forEach(btn => btn.classList.remove('active'));
+                btnElement.classList.add('active');
+            } else {
+                // Default reset
+                document.querySelectorAll('.category-btn').forEach(btn => btn.classList.remove('active'));
+                const firstBtn = document.querySelector('.category-btn');
+                if(firstBtn) firstBtn.classList.add('active');
+            }
+
+            const term = document.getElementById('searchInput').value;
+            renderProducts(category, term);
+        }
+
+        function getCategoryFromBtn(btn) {
+            return btn.innerText.toLowerCase();
+        }
+
+        // Initialize
+        window.addEventListener('DOMContentLoaded', () => {
+            renderProducts();
+        });
+
+    </script>
+</body>
+<!-- ADMIN PANEL -->
+<div id="adminPanel" class="fixed bottom-6 right-6 z-50">
+    <button onclick="toggleAdmin()" class="bg-yellow-500 text-black px-4 py-2 rounded-full font-bold shadow-lg">
+        ADMIN
+    </button>
+
+    <div id="adminBox" class="hidden mt-4 w-80 bg-slate-900 border border-slate-700 rounded-xl p-4 text-sm">
+        <h3 class="text-yellow-400 font-bold mb-3">Add Product</h3>
+
+        <input id="aName" placeholder="Product Name" class="w-full mb-2 px-3 py-2 rounded bg-slate-800 border border-slate-600">
+        <input id="aPrice" type="number" placeholder="Price (€)" class="w-full mb-2 px-3 py-2 rounded bg-slate-800 border border-slate-600">
+        
+        <select id="aCategory" class="w-full mb-2 px-3 py-2 rounded bg-slate-800 border border-slate-600">
+            <option value="shoes">Shoes</option>
+            <option value="clothing">Clothing</option>
+            <option value="accessories">Accessories</option>
+        </select>
+
+        <input id="aImage" placeholder="Image path / URL" class="w-full mb-2 px-3 py-2 rounded bg-slate-800 border border-slate-600">
+        <input id="aLink" placeholder="Buy Link" class="w-full mb-3 px-3 py-2 rounded bg-slate-800 border border-slate-600">
+
+        <label class="flex items-center gap-2 mb-3">
+            <input id="aBest" type="checkbox">
+            Best Seller
+        </label>
+
+        <button onclick="addProduct()" class="w-full bg-yellow-500 text-black py-2 rounded font-bold">
+            ADD PRODUCT
+        </button>
+    </div>
+</div>
+<script>
+function toggleAdmin() {
+    document.getElementById("adminBox").classList.toggle("hidden");
+}
+
+function addProduct() {
+    const product = {
+        name: document.getElementById("aName").value,
+        price: Number(document.getElementById("aPrice").value),
+        category: document.getElementById("aCategory").value,
+        image: document.getElementById("aImage").value,
+        link: document.getElementById("aLink").value,
+        bestSeller: document.getElementById("aBest").checked
+    };
+
+    if (!product.name || !product.price) {
+        alert("Name & Price required");
+        return;
+    }
+
+    const stored = JSON.parse(localStorage.getItem("adminProducts")) || [];
+    stored.push(product);
+    localStorage.setItem("adminProducts", JSON.stringify(stored));
+
+    alert("Product added ✅");
+    location.reload();
+}
+</script>
+<script>
+let editIndex = null;
+
+function openAdmin() {
+    document.getElementById("adminBox").classList.toggle("hidden");
+}
+
+function loginAdmin() {
+    if (document.getElementById("adminPass").value === ADMIN_PASSWORD) {
+        document.getElementById("adminLogin").classList.add("hidden");
+        document.getElementById("adminPanel").classList.remove("hidden");
+        renderAdminList();
+    } else {
+        alert("Wrong password");
+    }
+}
+
+// SAVE / UPDATE
+function saveProduct() {
+    const product = {
+        name: aName.value,
+        price: Number(aPrice.value),
+        category: aCategory.value,
+        image: aImage.value,
+        link: aLink.value,
+        bestSeller: aBest.checked
+    };
+
+    if (!product.name || !product.price) {
+        alert("Name & Price required");
+        return;
+    }
+
+    if (editIndex !== null) {
+        adminProducts[editIndex] = product;
+        editIndex = null;
+    } else {
+        adminProducts.push(product);
+    }
+
+    localStorage.setItem("adminProducts", JSON.stringify(adminProducts));
+    alert("Saved ✅");
+    location.reload();
+}
+
+// DELETE
+function deleteProduct(index) {
+    if (!confirm("Delete product?")) return;
+    adminProducts.splice(index, 1);
+    localStorage.setItem("adminProducts", JSON.stringify(adminProducts));
+    location.reload();
+}
+
+// EDIT
+function editProduct(index) {
+    const p = adminProducts[index];
+    aName.value = p.name;
+    aPrice.value = p.price;
+    aCategory.value = p.category;
+    aImage.value = p.image;
+    aLink.value = p.link;
+    aBest.checked = p.bestSeller;
+    editIndex = index;
+}
+
+// LIST
+function renderAdminList() {
+    const list = document.getElementById("productList");
+    list.innerHTML = "";
+
+    adminProducts.forEach((p, i) => {
+        list.innerHTML += `
+        <div class="flex justify-between items-center bg-slate-800 p-2 rounded">
+            <span class="truncate">${p.name}</span>
+            <div class="flex gap-2">
+                <button onclick="editProduct(${i})" class="text-yellow-400">✏️</button>
+                <button onclick="deleteProduct(${i})" class="text-red-500">🗑️</button>
+            </div>
+        </div>`;
+    });
+}
+</script>
+
+</html>
